@@ -6,7 +6,7 @@ var fs = require("fs"),
 login({email: "mail", password: "pass"}, function callback (err, api) {
     if(err) return console.error(err);
     var yourID = 1;
-    var folder = fs.readdirSync(__dirname + '/temp/parts');
+    var folder = fs.readdirSync(__dirname + '/parts');
 
     function uploader(i)
         {
@@ -16,7 +16,7 @@ login({email: "mail", password: "pass"}, function callback (err, api) {
                 {
                         var msg = {
                                 body: folder[i],
-                                attachment: fs.createReadStream(__dirname + '/temp/parts/' + folder[i])
+                                attachment: fs.createReadStream(__dirname + '/parts/' + folder[i])
                         }
                         log.info("Uploading " + folder[i] + ". " + j + "/" + folder.length);
                         api.sendMessage(msg, yourID, function(err) {
@@ -27,7 +27,8 @@ login({email: "mail", password: "pass"}, function callback (err, api) {
         }
         uploader(0);
 
-        var msg = {body: "-----------------------------------------\r\n" + process.argv[2] + "\r\nCasti: " + folder.length + "; Velikost: " + process.argv[3]};
-        api.sendMessage(msg, yourID);
+        var msg = {body: "-----------------------------------------\r\nSoubor:" + process.argv[2] + "\r\nCasti: " + folder.length + "; Velikost: " + process.argv[3]};
+    api.sendMessage(msg, yourID);
+
 
 });
