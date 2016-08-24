@@ -1,8 +1,12 @@
 facebook(){
-	nodemessage=`youtube-dl --get-filename --get-duration --restrict-filenames "$@"`
-	local datum=`date +%s`
-	youtube-dl "$@" --output "$datum"; tar cvf - "$datum"* | split --bytes=24MB - ./parts/"$datum".tar; rm "$datum"*
-	nodesize=`du -hs parts/`
-	node ../app.js "$nodemessage" "$nodesize"
-	rm ./parts/${datum}*
+        if ! cd ~/nodeapp/temp; then
+                echo "Directory missing"; return;
+        fi
+
+        python /usr/local/bin/youtube_dl/__main__.py "$@" --output '%(duration)s__%(title)s__%(id)s' --restrict-filenames
+        nodename=`ls`
+        tar cvf - ./* | split --bytes=25MB - ../parts/"$nodename".tar; rm ./*
+        nodesize=`du -hs ../parts/`
+        node ../app.js "$nodename" "$nodesize"
+        rm ../parts/*
 }
